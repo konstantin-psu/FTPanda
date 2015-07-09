@@ -1,0 +1,6 @@
+# Idea configuration
+.idea
+*.iml
+
+# Compiled binaries
+target
