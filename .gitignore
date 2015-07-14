@@ -4,3 +4,6 @@
 
 # Compiled binaries
 target
+
+# Maven
+dependency-reduced-pom.xml

@@ -1,4 +1,4 @@
 =======
 
-Build with maven.
-Run with: java -cp target\FTPanda-1.0-SNAPSHOT.jar edu.pdx.cs410.FTPanda
+Build with maven. (mvn package -DskipTests)
+Run with: java -jar target\FTPanda-1.0-SNAPSHOT.jar
