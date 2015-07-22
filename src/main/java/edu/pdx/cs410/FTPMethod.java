@@ -74,7 +74,7 @@ class UserCommand extends FTPMethod implements commandInterface {
         super(name, numberOfArgs, description);
     }
     public void printUser(Command commands) {
-        String user = commands.ftpConnection.cInfo.user;
+        String user = commands.ftpConnection.getConnectionInfo().getUser();
         if (user.length() == 0) {
             System.out.println("No user set yet");
         } else {
@@ -92,10 +92,8 @@ class UserCommand extends FTPMethod implements commandInterface {
         if (args.length < 3) {
             throw new InvalidCommand ("User [username] [password]");
         }
-        commands.ftpConnection.cInfo.user = args[1];
-        commands.ftpConnection.cInfo.password = args[2];
-
-
+        commands.ftpConnection.getConnectionInfo().setUser(args[1]);
+        commands.ftpConnection.getConnectionInfo().setPassword(args[2]);
     }
 }
 
@@ -109,8 +107,9 @@ class FtpCommand extends FTPMethod implements commandInterface {
         if (args.length != 3) {
             throw new InvalidCommand ("ftp [ftp_server_address] [port]");
         }
-        commands.ftpConnection.cInfo.server = args[1];
-        commands.ftpConnection.cInfo.port = new Integer(args[2]);
+
+        commands.ftpConnection.getConnectionInfo().setServer(args[1]);
+        commands.ftpConnection.getConnectionInfo().setPort(new Integer(args[2]));
         commands.ftpConnection.connect();
     }
 }

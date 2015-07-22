@@ -7,7 +7,7 @@ import org.apache.commons.net.ftp.FTP;
  */
 public class FTPandaRunner {
     public static void main(String[] args) {
-        FTPanda ftpClient = new FTPanda();
+        FTPanda ftpClient = new FTPanda(new Connection());
         ftpClient.mainLoop();
     }
 

@@ -1,19 +1,17 @@
 package edu.pdx.cs410;
 
-import org.apache.commons.net.ftp.FTPClient;
-
 import java.util.Scanner;
 
 /**
  * Created by Harley on 7/9/2015.
  */
 public class FTPanda {
-    final private FTPClient ftp = new FTPClient();
-    public Connection ftpConnection = new Connection();
+    public Connection ftpConnection;
     private Options opt = new Options();
     private String delimeter = null;
 
-    public FTPanda () {
+    public FTPanda (Connection connection) {
+        ftpConnection = connection;
         delimeter = ">>>";
     }
     private void printlnCLI(String toPrint) {

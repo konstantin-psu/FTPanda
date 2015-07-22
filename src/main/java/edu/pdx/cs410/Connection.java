@@ -9,25 +9,23 @@ import org.apache.commons.net.ftp.FTPReply;
  */
 public class Connection {
     public FTPClient ftpClient = new FTPClient();
-    public ConnectionInfo cInfo = new ConnectionInfo();
     public boolean connected = false;
+
+    private ConnectionInfo cInfo = new ConnectionInfo();
+
     public void connect() {
-            String server = cInfo.server;
-            int port = cInfo.port;
-            String user = cInfo.user;
-            String pass = cInfo.password;
             try {
                 if (connected) {
                     System.out.println("Already connected, disconnect first.");
                 } else {
-                    ftpClient.connect(server, port);
+                    ftpClient.connect(cInfo.getServer(), cInfo.getPort());
                     showServerReply(ftpClient);
                     int replyCode = ftpClient.getReplyCode();
                     if (!FTPReply.isPositiveCompletion(replyCode)) {
                         System.out.println("Operation failed. Server reply code: " + replyCode);
                         return;
                     }
-                    boolean success = ftpClient.login(user, pass);
+                    boolean success = ftpClient.login(cInfo.getUser(), cInfo.getPassword());
                     showServerReply(ftpClient);
                     if (!success) {
                         System.out.println("Could not login to the server");
@@ -60,5 +58,9 @@ public class Connection {
                 System.out.println("SERVER: " + aReply);
             }
         }
+    }
+
+    public ConnectionInfo getConnectionInfo() {
+        return cInfo;
     }
 }
