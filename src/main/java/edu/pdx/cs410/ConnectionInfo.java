@@ -11,7 +11,7 @@ public class ConnectionInfo {
 
     public ConnectionInfo() {
         server = "localhost";
-        port = 21;
+        port = 2221;
         user = "";
         password = "";
     }
