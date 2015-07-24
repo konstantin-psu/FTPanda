@@ -4,14 +4,18 @@ package edu.pdx.cs410;
  * Created by konstantin on 7/21/15.
  */
 import org.apache.ftpserver.*;
+import org.apache.ftpserver.ftplet.Authority;
 import org.apache.ftpserver.ftplet.UserManager;
 import org.apache.ftpserver.listener.ListenerFactory;
 import org.apache.ftpserver.usermanager.PropertiesUserManagerFactory;
 import org.apache.ftpserver.usermanager.SaltedPasswordEncryptor;
 import org.apache.ftpserver.usermanager.impl.BaseUser;
+import org.apache.ftpserver.usermanager.impl.WritePermission;
 
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class FTPServer {
@@ -45,7 +49,11 @@ public class FTPServer {
             BaseUser user = new BaseUser();
             user.setName("myNewUser");
             user.setPassword("secret");
-            user.setHomeDirectory("ftproot");
+            user.setEnabled(true);
+            user.setHomeDirectory("/root");
+            List<Authority> authorities = new ArrayList<Authority>();
+            authorities.add(new WritePermission());
+            user.setAuthorities(authorities);
             um.save(user);
             serverFactory.setUserManager(um);
         } catch (Exception e) {

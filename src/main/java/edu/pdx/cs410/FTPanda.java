@@ -1,55 +1,42 @@
 package edu.pdx.cs410;
 
-import org.apache.commons.net.ftp.FTPClient;
-
 import java.util.Scanner;
 
 /**
- * Created by Harley on 7/9/2015.
+ * Created by Slick on 7/23/15.
  */
 public class FTPanda {
-    final private FTPClient ftp = new FTPClient();
-    public Connection ftpConnection = new Connection();
-    private Options opt = new Options();
-    private String delimeter = null;
+    private Client client;
+    private Options option;
 
-    public FTPanda () {
-        delimeter = ">>>";
-    }
-    private void printlnCLI(String toPrint) {
-        printCLI(toPrint+"\n");
+    public FTPanda() {
+        client = new Client();
+        option = new Options();
     }
 
-    private void printCLI() {
-        System.out.print(delimeter + " ");
-    }
-    private void printCLI(String toPrint) {
-        System.out.print(delimeter + " " + toPrint);
-    }
-
-    public void mainLoop() {
-        printlnCLI("Welcome to FTPanda");
-        while(true) {
+    public void run() {
+        String currentLine;
+        System.out.println(">> Welcome to FTPanda!");
+        while (true) {
             Scanner scanner = new Scanner(System.in);
-            printCLI();
-            String currentLine = scanner.nextLine();
-            run(currentLine);
-
+            System.out.print(">> ");
+            currentLine = scanner.nextLine();
+            parse(currentLine);
         }
     }
 
-    public void run(String command) {
-        Command currentCommand = new Command(toArray(command), ftpConnection);
-        opt.action(currentCommand);
-    }
+    public void parse(String input) {
+        String[] userInput;
 
-    private String [] toArray(String input) {
-        if (input.contains(" "))  {
-            return input.split(" ");
+        if (input.equals("")) {
+            return;
         }
-        String [] ret = new String[1];
-        ret[0] = input;
-        return ret;
+        if (input.contains(" ")) {
+            userInput = input.split(" ");
+        } else {
+            userInput = new String[]{input};
+        }
+
+        option.action(userInput, client);
     }
 }
-
