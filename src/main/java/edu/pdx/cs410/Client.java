@@ -53,7 +53,8 @@ public class Client {
                 } else {
                     System.out.println(">> Logged in successfully with " + user);
                 }
-                createDirectory("root");
+                //Testing to see if it can create a directory as soon as it connects.
+                //createDirectory("root");
             }
         } catch (SocketException e) {
             System.err.println(e.getMessage());

@@ -6,8 +6,8 @@ package edu.pdx.cs410;
  */
 public class FTPandaRunner {
     public static void main(String[] args) {
-        //FTPServer testServer = new FTPServer();
-        //testServer.run();
+        FTPServer testServer = new FTPServer();
+        testServer.run();
         FTPanda ftpClient = new FTPanda();
         ftpClient.run();
     }
