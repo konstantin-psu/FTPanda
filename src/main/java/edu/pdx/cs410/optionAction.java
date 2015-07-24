@@ -55,7 +55,8 @@ class ExitOption extends OptionInterface {
     }
 
     public void run(String[] input, Client client) {
-        System.out.println("Goodbye");
+        System.out.println(">> Disconnecting from the server...");
+        client.disconnect();
         System.exit(0);
     }
 }
