@@ -15,7 +15,6 @@ public class Command {
         arguments = args;
         ftpConnection = ftp;
         name = arguments[0];
-
     }
     public int length() {
         return arguments.length;
