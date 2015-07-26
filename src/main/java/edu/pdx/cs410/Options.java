@@ -49,6 +49,9 @@ public class Options {
 
         name = "lcd";
         options.put(name, new CDLocalCommand (name, "[path relative to current local directory]", "Change working directory on local side"));
+
+        name = "put";
+        options.put(name, new PutCommand(name, "[filename] [destination path relative to current remote directory]", "Upload file from local working directory to remote path specified"));
     }
 
 

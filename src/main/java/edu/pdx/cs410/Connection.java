@@ -4,8 +4,7 @@ import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
@@ -186,6 +185,31 @@ public class Connection {
                 System.out.println(f.getName() + '/');
             else
                 System.out.println(f.getName());
+        }
+    }
+
+    public void put(String filename, String remotePath){
+        File cwd = new File(FTPanda.cwd);
+        File f = new File(cwd, filename);
+        InputStream fs;
+        try {
+            fs = new FileInputStream(f.getAbsolutePath());
+        }
+        catch (FileNotFoundException ex){
+            System.out.println(filename + " not found!!");
+            return;
+        }
+        try{
+            Boolean success = ftpClient.storeFile(remotePath, fs);
+            showServerReply(ftpClient);
+            if (!success){
+                System.out.println("Failed to upload " + filename + " to " + remotePath);
+                return;
+            }
+            System.out.println("Successfully uploaded " + filename + " to " + remotePath);
+        }
+        catch (IOException ex){
+            ex.printStackTrace();
         }
     }
 

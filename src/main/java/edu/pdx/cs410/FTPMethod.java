@@ -215,3 +215,14 @@ class ListLocalCommand extends FTPMethod implements commandInterface {
         commands.ftpConnection.lls();
     }
 }
+
+class PutCommand extends FTPMethod implements commandInterface{
+    public PutCommand(String name, String use, String description){
+        super(name, use, description);
+    }
+    public void run(Command commands) throws InvalidCommand{
+        if (commands.length() != 3)
+            throw new InvalidCommand(name + ' ' + usage);
+        commands.ftpConnection.put(commands.arguments[1], commands.arguments[2]);
+    }
+}
