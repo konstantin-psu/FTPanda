@@ -3,6 +3,7 @@ package edu.pdx.cs410;
 import org.omg.CORBA.DynAnyPackage.Invalid;
 
 import javax.swing.text.html.Option;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -25,7 +26,13 @@ public class FTPMethod {
     }
 
     public String HelpString() {
-        return name+" "+description;
+        int descritptionPosition = 20;
+        int offset = descritptionPosition - name.length();
+        char [] spaces = new char[offset];
+        Arrays.fill(spaces, ' ');
+        String offsetPosition = new String(spaces);
+
+        return name+offsetPosition+description;
     }
 }
 

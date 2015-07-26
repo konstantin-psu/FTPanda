@@ -12,19 +12,20 @@ import org.apache.ftpserver.usermanager.PropertiesUserManagerFactory;
 import org.apache.ftpserver.usermanager.SaltedPasswordEncryptor;
 import org.apache.ftpserver.usermanager.impl.BaseUser;
 import org.apache.ftpserver.usermanager.impl.WritePermission;
+import org.apache.log4j.PropertyConfigurator;
 
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 
 public class FTPServer {
-    private static Logger _logger;
     public void run() {
         try {
+            PropertyConfigurator.configure("log4j.properties");
             FtpServerFactory serverFactory = new FtpServerFactory();
             ConnectionConfigFactory connectionConfigFactory = new ConnectionConfigFactory();
             connectionConfigFactory.setAnonymousLoginEnabled(true);
@@ -36,10 +37,10 @@ public class FTPServer {
             serverFactory.addListener("default", factory.createListener());
 
             FtpServer server = serverFactory.createServer();
-            _logger = LoggerFactory.getLogger(FtpServer.class);
+
             // start the server
             server.start();
-            TimeUnit.SECONDS.sleep(3);
+            TimeUnit.SECONDS.sleep(1);
         } catch (Exception e) {
             System.out.println(e.toString());
         }

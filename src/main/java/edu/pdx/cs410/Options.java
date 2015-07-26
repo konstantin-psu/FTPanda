@@ -17,7 +17,7 @@ public class Options {
     public Options() {
         String name;
 
-        name = "h";
+        name = "help";
         options.put(name, new HelpCommand(name, 0, "Print help for this application", this));
 
         name = "exit";
