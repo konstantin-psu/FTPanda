@@ -15,10 +15,11 @@ public class FTPMethod {
     public Integer numberOfArguments;
     public String description;
     public String name;
+    public String usage;
 
-    public FTPMethod(String nm, Integer numberOfArgs, String desc) {
-        numberOfArguments = numberOfArgs;
+    public FTPMethod(String nm, String use, String desc) {
         description = desc;
+        usage = use;
         name = nm;
     }
     public void run(String [] commands) {
@@ -32,14 +33,14 @@ public class FTPMethod {
         Arrays.fill(spaces, ' ');
         String offsetPosition = new String(spaces);
 
-        return name+offsetPosition+description;
+        return name+" "+usage+"\n  "+description;
     }
 }
 
 class HelpCommand extends FTPMethod implements  commandInterface {
     Options optionsHost;
-    public HelpCommand(String name, Integer numberOfArgs, String description, Options optionsHolder) {
-        super(name, numberOfArgs, description);
+    public HelpCommand(String name, String use, String description, Options optionsHolder) {
+        super(name, use, description);
         optionsHost = optionsHolder;
     }
 
@@ -61,16 +62,14 @@ class HelpCommand extends FTPMethod implements  commandInterface {
                     System.out.println(commandInfo.HelpString());
                 }
             }
-            for (int i= 0; i< commands.length() ; i++ ) {
-            }
         }
 
     }
 }
 
 class ExitCommand extends FTPMethod implements commandInterface {
-    public ExitCommand(String name, Integer numberOfArgs, String description) {
-        super(name, numberOfArgs, description);
+    public ExitCommand(String name, String use, String description) {
+        super(name, use, description);
     }
 
     public void run(Command commands) {
@@ -80,8 +79,8 @@ class ExitCommand extends FTPMethod implements commandInterface {
 }
 
 class UserCommand extends FTPMethod implements commandInterface {
-    public UserCommand(String name, Integer numberOfArgs, String description) {
-        super(name, numberOfArgs, description);
+    public UserCommand(String name, String use, String description) {
+        super(name, use, description);
     }
     public void printUser(Command commands) {
         String user = commands.ftpConnection.cInfo.user;
@@ -100,7 +99,7 @@ class UserCommand extends FTPMethod implements commandInterface {
         }
 
         if (args.length < 2) {
-            throw new InvalidCommand ("User [username] [password]?");
+            throw new InvalidCommand (name + ' ' + usage);
         }
         commands.ftpConnection.cInfo.user = args[1];
         commands.ftpConnection.cInfo.password = "";
@@ -114,14 +113,14 @@ class UserCommand extends FTPMethod implements commandInterface {
 }
 
 class FtpCommand extends FTPMethod implements commandInterface {
-    public FtpCommand(String name, Integer numberOfArgs, String description) {
-        super(name, numberOfArgs, description);
+    public FtpCommand(String name, String use, String description) {
+        super(name, use, description);
     }
 
     public void run(Command commands) throws InvalidCommand {
-        String [] args = commands.arguments; //user [username] [password]
+        String [] args = commands.arguments;
         if (args.length != 3) {
-            throw new InvalidCommand ("ftp [ftp_server_address] [port]");
+            throw new InvalidCommand (name + ' ' + usage);
         }
         commands.ftpConnection.cInfo.server = args[1];
         commands.ftpConnection.cInfo.port = new Integer(args[2]);
@@ -130,40 +129,40 @@ class FtpCommand extends FTPMethod implements commandInterface {
 }
 
 class LogoffCommand extends FTPMethod implements commandInterface {
-    public LogoffCommand(String name, Integer numberOfArgs, String description) {
-        super(name, numberOfArgs, description);
+    public LogoffCommand(String name, String use, String description) {
+        super(name, use, description);
     }
 
     public void run(Command commands) throws InvalidCommand {
         String [] args = commands.arguments; //user [username] [password]
         if (args.length != 1) {
-            throw new InvalidCommand (name);
+            throw new InvalidCommand (name + ' ' + usage);
         }
         commands.ftpConnection.disconnect();
     }
 }
 
 class ListRemoteCommand extends FTPMethod implements commandInterface {
-    public ListRemoteCommand(String name, Integer numberOfArgs, String description) {
-        super(name, numberOfArgs, description);
+    public ListRemoteCommand(String name, String use, String description) {
+        super(name, use, description);
     }
 
     public void run(Command commands) throws InvalidCommand {
         if (commands.length() != 1) {
-            throw new InvalidCommand(name);
+            throw new InvalidCommand(name + ' ' + usage);
         }
         commands.ftpConnection.listFiles();
     }
 }
 
 class MakeDirectoryRemoteCommand extends FTPMethod implements commandInterface {
-    public MakeDirectoryRemoteCommand(String name, Integer numberOfArgs, String description) {
-        super(name, numberOfArgs, description);
+    public MakeDirectoryRemoteCommand(String name, String use, String description) {
+        super(name, use, description);
     }
 
     public void run(Command commands) throws InvalidCommand {
         if (commands.length() != 2) {
-            throw new InvalidCommand(name);
+            throw new InvalidCommand(name + ' ' + usage);
         }
 
         commands.ftpConnection.createDirectory(commands.arguments[1]);
@@ -171,13 +170,13 @@ class MakeDirectoryRemoteCommand extends FTPMethod implements commandInterface {
 }
 
 class PWDRemoteCommand extends FTPMethod implements commandInterface {
-    public PWDRemoteCommand(String name, Integer numberOfArgs, String description) {
-        super(name, numberOfArgs, description);
+    public PWDRemoteCommand(String name, String use, String description) {
+        super(name, use, description);
     }
 
     public void run(Command commands) throws InvalidCommand {
         if (commands.length() != 1) {
-            throw new InvalidCommand(name);
+            throw new InvalidCommand(name + ' ' + usage);
         }
 
         commands.ftpConnection.rpwd();
@@ -185,15 +184,53 @@ class PWDRemoteCommand extends FTPMethod implements commandInterface {
 }
 
 class CDRemoteCommand extends FTPMethod implements commandInterface {
-    public CDRemoteCommand(String name, Integer numberOfArgs, String description) {
-        super(name, numberOfArgs, description);
+    public CDRemoteCommand(String name, String use, String description) {
+        super(name, use, description);
     }
 
     public void run(Command commands) throws InvalidCommand {
         if (commands.length() != 2) {
-            throw new InvalidCommand(name);
+            throw new InvalidCommand(name + ' ' + usage);
         }
 
         commands.ftpConnection.cd(commands.arguments[1]);
+    }
+}
+
+class CDLocalCommand extends FTPMethod implements commandInterface {
+    public CDLocalCommand(String name, String use, String description) {
+        super(name, use, description);
+    }
+
+    public void run(Command commands) throws InvalidCommand {
+        if (commands.length() != 2) {
+            throw new InvalidCommand(name + ' ' + usage);
+        }
+
+        commands.ftpConnection.lcd(commands.arguments[1]);
+    }
+}
+
+class ListLocalCommand extends FTPMethod implements commandInterface {
+    public ListLocalCommand(String name, String use, String description) {
+        super(name, use, description);
+    }
+
+    public void run(Command commands) throws InvalidCommand {
+        if (commands.length() != 1) {
+            throw new InvalidCommand(name + ' ' + usage);
+        }
+        commands.ftpConnection.lls();
+    }
+}
+
+class PutCommand extends FTPMethod implements commandInterface{
+    public PutCommand(String name, String use, String description){
+        super(name, use, description);
+    }
+    public void run(Command commands) throws InvalidCommand{
+        if (commands.length() != 3)
+            throw new InvalidCommand(name + ' ' + usage);
+        commands.ftpConnection.put(commands.arguments[1], commands.arguments[2]);
     }
 }

@@ -4,7 +4,7 @@ import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
 
-import java.io.IOException;
+import java.io.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
@@ -157,6 +157,60 @@ public class Connection {
             System.err.println(e.getMessage());
         }
         return returnMessage;
+    }
+
+    public void lcd(String argument){
+        File oldcwd = new File(FTPanda.cwd);
+        File newcwd = new File(oldcwd, argument);
+        try {
+            String tmp = newcwd.getCanonicalPath();
+            if (!newcwd.exists() || !newcwd.isDirectory()){
+                System.out.println(tmp + " does not exist!!");
+            }
+            else {
+                FTPanda.cwd = tmp;
+            }
+        }
+        catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void lls(){
+        File cwd = new File(FTPanda.cwd);
+        File[] files = cwd.listFiles();
+        System.out.println(FTPanda.cwd + ':');
+        for (File f : files){
+            if (f.isDirectory())
+                System.out.println(f.getName() + '/');
+            else
+                System.out.println(f.getName());
+        }
+    }
+
+    public void put(String filename, String remotePath){
+        File cwd = new File(FTPanda.cwd);
+        File f = new File(cwd, filename);
+        InputStream fs;
+        try {
+            fs = new FileInputStream(f.getAbsolutePath());
+        }
+        catch (FileNotFoundException ex){
+            System.out.println(filename + " not found!!");
+            return;
+        }
+        try{
+            Boolean success = ftpClient.storeFile(remotePath, fs);
+            showServerReply(ftpClient);
+            if (!success){
+                System.out.println("Failed to upload " + filename + " to " + remotePath);
+                return;
+            }
+            System.out.println("Successfully uploaded " + filename + " to " + remotePath);
+        }
+        catch (IOException ex){
+            ex.printStackTrace();
+        }
     }
 
 //    public ConnectionInfo getConnectionInfo() {

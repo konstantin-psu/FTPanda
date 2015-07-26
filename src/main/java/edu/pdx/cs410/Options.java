@@ -18,31 +18,40 @@ public class Options {
         String name;
 
         name = "help";
-        options.put(name, new HelpCommand(name, 0, "Print help for this application", this));
+        options.put(name, new HelpCommand(name, "", "Print help for this application", this));
 
         name = "exit";
-        options.put(name, new ExitCommand(name, 0, "Quit the application"));
+        options.put(name, new ExitCommand(name, "", "Quit the application"));
 
         name = "user";
-        options.put(name, new UserCommand(name, 3, "Format: user [uname] [passwd]"));
+        options.put(name, new UserCommand(name, "[uname] [passwd]", "Enter credentials to use for login"));
 
         name = "ftp";
-        options.put(name, new FtpCommand (name, 2, "Format: ftp [server_address] [port]"));
+        options.put(name, new FtpCommand (name, "[server_address] [port]", ""));
 
         name = "logoff";
-        options.put(name, new LogoffCommand (name, 2, "Close ftp connection"));
+        options.put(name, new LogoffCommand (name, "", "Close ftp connection"));
 
  		name = "rls";
-        options.put(name, new ListRemoteCommand(name, 1 ,"Lists the files and folders in the directory on remote site."));
+        options.put(name, new ListRemoteCommand(name, "", "List files/directories in remote working directory"));
 
         name = "rmkdir";
-        options.put(name, new MakeDirectoryRemoteCommand(name, 1 ,"Makes a directory in your current path on remote site."));
+        options.put(name, new MakeDirectoryRemoteCommand(name, "[dir name]", "Create directory in working directory on remote side"));
 
         name = "rpwd";
-        options.put(name, new PWDRemoteCommand(name, 0 ,"Print working directory on remote side."));
+        options.put(name, new PWDRemoteCommand(name, "", "Print working directory on remote side"));
 
         name = "rcd";
-        options.put(name, new CDRemoteCommand(name, 1 ,"Change directory on remote side."));
+        options.put(name, new CDRemoteCommand(name, "[path]", "Change working directory on remote side"));
+
+        name = "lls";
+        options.put(name, new ListLocalCommand (name, "", "List files/directories in local working directory"));
+
+        name = "lcd";
+        options.put(name, new CDLocalCommand (name, "[path relative to current local directory]", "Change working directory on local side"));
+
+        name = "put";
+        options.put(name, new PutCommand(name, "[filename] [destination path relative to current remote directory]", "Upload file from local working directory to remote path specified"));
     }
 
 

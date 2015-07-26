@@ -2,6 +2,8 @@ package edu.pdx.cs410;
 
 import org.apache.commons.net.ftp.FTPClient;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Scanner;
 
 /**
@@ -12,9 +14,18 @@ public class FTPanda {
     public Connection ftpConnection = new Connection();
     private Options opt = new Options();
     private String delimeter = null;
+    public static String cwd = null;
 
     public FTPanda () {
         delimeter = ">>>";
+        File f = new File(".");
+        try {
+            cwd = f.getCanonicalPath();
+        }
+        catch (IOException ex) {
+            ex.printStackTrace();
+            System.exit(1);
+        }
     }
     private void printlnCLI(String toPrint) {
         printCLI(toPrint+"\n");
