@@ -43,6 +43,12 @@ public class Options {
 
         name = "rcd";
         options.put(name, new CDRemoteCommand(name, 1 ,"Change directory on remote side."));
+
+        name = "lls";
+        options.put(name, new ListLocalCommand (name, 1, "List files/directories in local cwd"));
+
+        name = "lcd";
+        options.put(name, new CDLocalCommand (name, 2, "Format: lcd [path to change local cwd to]"));
     }
 
 

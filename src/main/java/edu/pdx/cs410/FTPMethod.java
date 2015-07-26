@@ -190,3 +190,30 @@ class CDRemoteCommand extends FTPMethod implements commandInterface {
         commands.ftpConnection.cd(commands.arguments[1]);
     }
 }
+
+class CDLocalCommand extends FTPMethod implements commandInterface {
+    public CDLocalCommand(String name, Integer numberOfArgs, String description) {
+        super(name, numberOfArgs, description);
+    }
+
+    public void run(Command commands) throws InvalidCommand {
+        if (commands.length() != 2) {
+            throw new InvalidCommand(name);
+        }
+
+        commands.ftpConnection.lcd(commands.arguments[1]);
+    }
+}
+
+class ListLocalCommand extends FTPMethod implements commandInterface {
+    public ListLocalCommand(String name, Integer numberOfArgs, String description) {
+        super(name, numberOfArgs, description);
+    }
+
+    public void run(Command commands) throws InvalidCommand {
+        if (commands.length() != 1) {
+            throw new InvalidCommand(name);
+        }
+        commands.ftpConnection.lls();
+    }
+}
