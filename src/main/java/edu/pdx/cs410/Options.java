@@ -31,6 +31,18 @@ public class Options {
 
         name = "logoff";
         options.put(name, new LogoffCommand (name, 2, "Close ftp connection"));
+
+ 		name = "rls";
+        options.put(name, new ListRemoteCommand(name, 1 ,"Lists the files and folders in the directory on remote site."));
+
+        name = "rmkdir";
+        options.put(name, new MakeDirectoryRemoteCommand(name, 1 ,"Makes a directory in your current path on remote site."));
+
+        name = "rpwd";
+        options.put(name, new PWDRemoteCommand(name, 0 ,"Print working directory on remote side."));
+
+        name = "rcd";
+        options.put(name, new CDRemoteCommand(name, 1 ,"Change directory on remote side."));
     }
 
 

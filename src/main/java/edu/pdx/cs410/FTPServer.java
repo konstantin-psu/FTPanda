@@ -4,20 +4,31 @@ package edu.pdx.cs410;
  * Created by konstantin on 7/21/15.
  */
 import org.apache.ftpserver.*;
+
+import org.apache.ftpserver.ftplet.Authority;
 import org.apache.ftpserver.ftplet.UserManager;
 import org.apache.ftpserver.listener.ListenerFactory;
 import org.apache.ftpserver.usermanager.PropertiesUserManagerFactory;
 import org.apache.ftpserver.usermanager.SaltedPasswordEncryptor;
 import org.apache.ftpserver.usermanager.impl.BaseUser;
+import org.apache.ftpserver.usermanager.impl.WritePermission;
 
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class FTPServer {
+    private static Logger _logger;
     public void run() {
         try {
             FtpServerFactory serverFactory = new FtpServerFactory();
+            ConnectionConfigFactory connectionConfigFactory = new ConnectionConfigFactory();
+            connectionConfigFactory.setAnonymousLoginEnabled(true);
+            serverFactory.setConnectionConfig(connectionConfigFactory.createConnectionConfig());
 
             setUser(serverFactory);
             ListenerFactory factory = new ListenerFactory();
@@ -25,6 +36,7 @@ public class FTPServer {
             serverFactory.addListener("default", factory.createListener());
 
             FtpServer server = serverFactory.createServer();
+            _logger = LoggerFactory.getLogger(FtpServer.class);
             // start the server
             server.start();
             TimeUnit.SECONDS.sleep(3);
@@ -45,9 +57,18 @@ public class FTPServer {
             BaseUser user = new BaseUser();
             user.setName("myNewUser");
             user.setPassword("secret");
-            user.setHomeDirectory("ftproot");
+            user.setEnabled(true);
+            user.setHomeDirectory("/root");
+            List<Authority> authorities = new ArrayList<Authority>();
+            authorities.add(new WritePermission());
+            user.setAuthorities(authorities);
             um.save(user);
             serverFactory.setUserManager(um);
+
+            BaseUser anon = new BaseUser();
+            anon.setName("anonymous");
+            serverFactory.getUserManager().save(anon);
+
         } catch (Exception e) {
             e.printStackTrace();
         }

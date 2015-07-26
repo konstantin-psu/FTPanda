@@ -1,5 +1,8 @@
 package edu.pdx.cs410;
 
+import org.omg.CORBA.DynAnyPackage.Invalid;
+
+import javax.swing.text.html.Option;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -89,11 +92,15 @@ class UserCommand extends FTPMethod implements commandInterface {
             return;
         }
 
-        if (args.length < 3) {
-            throw new InvalidCommand ("User [username] [password]");
+        if (args.length < 2) {
+            throw new InvalidCommand ("User [username] [password]?");
         }
         commands.ftpConnection.cInfo.user = args[1];
-        commands.ftpConnection.cInfo.password = args[2];
+        commands.ftpConnection.cInfo.password = "";
+
+        if (args.length == 3) {
+            commands.ftpConnection.cInfo.password = args[2];
+        }
 
 
     }
@@ -126,5 +133,60 @@ class LogoffCommand extends FTPMethod implements commandInterface {
             throw new InvalidCommand (name);
         }
         commands.ftpConnection.disconnect();
+    }
+}
+
+class ListRemoteCommand extends FTPMethod implements commandInterface {
+    public ListRemoteCommand(String name, Integer numberOfArgs, String description) {
+        super(name, numberOfArgs, description);
+    }
+
+    public void run(Command commands) throws InvalidCommand {
+        if (commands.length() != 1) {
+            throw new InvalidCommand(name);
+        }
+        commands.ftpConnection.listFiles();
+    }
+}
+
+class MakeDirectoryRemoteCommand extends FTPMethod implements commandInterface {
+    public MakeDirectoryRemoteCommand(String name, Integer numberOfArgs, String description) {
+        super(name, numberOfArgs, description);
+    }
+
+    public void run(Command commands) throws InvalidCommand {
+        if (commands.length() != 2) {
+            throw new InvalidCommand(name);
+        }
+
+        commands.ftpConnection.createDirectory(commands.arguments[1]);
+    }
+}
+
+class PWDRemoteCommand extends FTPMethod implements commandInterface {
+    public PWDRemoteCommand(String name, Integer numberOfArgs, String description) {
+        super(name, numberOfArgs, description);
+    }
+
+    public void run(Command commands) throws InvalidCommand {
+        if (commands.length() != 1) {
+            throw new InvalidCommand(name);
+        }
+
+        commands.ftpConnection.rpwd();
+    }
+}
+
+class CDRemoteCommand extends FTPMethod implements commandInterface {
+    public CDRemoteCommand(String name, Integer numberOfArgs, String description) {
+        super(name, numberOfArgs, description);
+    }
+
+    public void run(Command commands) throws InvalidCommand {
+        if (commands.length() != 2) {
+            throw new InvalidCommand(name);
+        }
+
+        commands.ftpConnection.cd(commands.arguments[1]);
     }
 }
