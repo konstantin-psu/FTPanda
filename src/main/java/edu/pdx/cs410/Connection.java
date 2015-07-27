@@ -65,7 +65,7 @@ public class Connection {
             if (!success) {
                 System.out.println("Could not logout of the server.");
             } else {
-                System.out.printf("Logged out successfully");
+                System.out.println("Logged out successfully");
             }
         } catch (IOException e) {
             System.err.println(e.getMessage());
@@ -73,9 +73,14 @@ public class Connection {
     }
 
     public void disconnect() {
+        if (!connected){
+            System.out.println("Not connected to server");
+            return;
+        }
         try {
             logout();
             ftpClient.disconnect();
+            connected = false;
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
