@@ -15,37 +15,34 @@ public class Connection {
     public FTPClient ftpClient = new FTPClient();
     public ConnectionInfo cInfo = new ConnectionInfo();
     public boolean connected = false;
-    public void connect() {
-            String server = cInfo.server;
-            int port = cInfo.port;
-            String user = cInfo.user;
-            String pass = cInfo.password;
+    public void connect() throws CommandFailed {
+        String server = cInfo.server;
+        int port = cInfo.port;
+        String user = cInfo.user;
+        String pass = cInfo.password;
+        if (connected) {
+            throw new CommandFailed("Already connected, disconnect first.");
+        } else {
             try {
-                if (connected) {
-                    System.out.println("Already connected, disconnect first.");
-                } else {
-                    ftpClient.connect(server, port);
-                    showServerReply(ftpClient);
-                    int replyCode = ftpClient.getReplyCode();
-                    if (!FTPReply.isPositiveCompletion(replyCode)) {
-                        System.out.println("Operation failed. Server reply code: " + replyCode);
-                        return;
-                    }
-                    boolean success = ftpClient.login(user, pass);
-                    showServerReply(ftpClient);
-                    if (!success) {
-                        System.out.println("Could not login to the server");
-                        return;
-                    } else {
-                        System.out.println("LOGGED IN SERVER");
-                        connected = true;
-                    }
+                ftpClient.connect(server, port);
+                showServerReply(ftpClient);
+                int replyCode = ftpClient.getReplyCode();
+                if (!FTPReply.isPositiveCompletion(replyCode)) {
+                    throw new CommandFailed("Operation failed. Server reply code: " + replyCode);
                 }
-            } catch (IOException ex) {
-                System.out.println("Oops! Something wrong happened");
-                ex.printStackTrace();
-
+                boolean success = ftpClient.login(user, pass);
+                showServerReply(ftpClient);
+                if (!success) {
+                    throw new CommandFailed("Could not login to the server");
+                } else {
+                    System.out.println("LOGGED IN SERVER");
+                    connected = true;
+                }
             }
+            catch (IOException ex){
+                throw new CommandFailed(ex.getMessage());
+            }
+        }
     }
 
     private static void showServerReply(FTPClient ftpClient) {
@@ -57,40 +54,38 @@ public class Connection {
         }
     }
 
-    public void logout() {
+    public void logout() throws CommandFailed{
         boolean success;
-
         try {
             success = ftpClient.logout();
             if (!success) {
-                System.out.println("Could not logout of the server.");
+                throw new CommandFailed("Could not logout of the server.");
             } else {
                 System.out.println("Logged out successfully");
             }
         } catch (IOException e) {
-            System.err.println(e.getMessage());
+            throw new CommandFailed(e.getMessage());
         }
     }
 
-    public void disconnect() {
+    public void disconnect() throws CommandFailed{
         if (!connected){
-            System.out.println("Not connected to server");
-            return;
+            throw new CommandFailed("Not connected to server");
         }
         try {
             logout();
             ftpClient.disconnect();
             connected = false;
         } catch (IOException e) {
-            System.err.println(e.getMessage());
+            throw new CommandFailed(e.getMessage());
         }
     }
 
-    public void listFiles() {
+    public void listFiles() throws CommandFailed{
         String currentDir = rpwd();
         rls(currentDir);
     }
-    public void rls(String fileLocation) {
+    public void rls(String fileLocation) throws CommandFailed{
         FTPFile[] files;
         DateFormat df = new SimpleDateFormat("MM-dd-yyyy HH:mm");
         String details;
@@ -108,11 +103,11 @@ public class Connection {
                 System.out.println(details);
             }
         } catch (IOException e) {
-            System.err.println(e.getMessage());
+            throw new CommandFailed(e.getMessage());
         }
     }
 
-    public void createDirectory(String name) {
+    public void createDirectory(String name) throws CommandFailed{
         boolean success;
         String dirName = name;
         try {
@@ -121,15 +116,15 @@ public class Connection {
             if (success) {
                 System.out.println("Successfully created a directory: " + dirName);
             } else {
-                System.out.println("Failed to create directory. See server's reply.");
+                throw new CommandFailed("Failed to create directory. See server's reply.");
             }
         } catch (IOException e) {
-            System.err.println(e.getMessage());
+            throw new CommandFailed(e.getMessage());
         }
 
     }
 
-    public String rpwd() {
+    public String rpwd() throws CommandFailed{
         String pathName = null;
         try {
             pathName = ftpClient.printWorkingDirectory();
@@ -137,16 +132,16 @@ public class Connection {
             if (pathName != null) {
                 System.out.println(">>> " + pathName);
             } else {
-                System.out.println("Failed to fetch current working directory. See server's reply.");
+                throw new CommandFailed("Failed to fetch current working directory. See server's reply.");
             }
         } catch (IOException e) {
-            System.err.println(e.getMessage());
+            throw new CommandFailed(e.getMessage());
         }
         return pathName;
     }
 
 
-    public String cd(String argument) {
+    public String cd(String argument) throws CommandFailed{
         Boolean success;
         String returnMessage = null;
         try {
@@ -156,28 +151,28 @@ public class Connection {
                 returnMessage = "current directory: "+argument;
                 System.out.println(returnMessage);
             } else {
-                System.out.println("Failed to change directory. See server's reply.");
+                throw new CommandFailed("Failed to change directory. See server's reply.");
             }
         } catch (IOException e) {
-            System.err.println(e.getMessage());
+            throw new CommandFailed(e.getMessage());
         }
         return returnMessage;
     }
 
-    public void lcd(String argument){
+    public void lcd(String argument) throws CommandFailed{
         File oldcwd = new File(FTPanda.cwd);
         File newcwd = new File(oldcwd, argument);
         try {
             String tmp = newcwd.getCanonicalPath();
             if (!newcwd.exists() || !newcwd.isDirectory()){
-                System.out.println(tmp + " does not exist!!");
+                throw new CommandFailed(tmp + " does not exist!!");
             }
             else {
                 FTPanda.cwd = tmp;
             }
         }
         catch (IOException ex) {
-            ex.printStackTrace();
+            throw new CommandFailed(ex.getMessage());
         }
     }
 
@@ -193,7 +188,7 @@ public class Connection {
         }
     }
 
-    public void put(String filename, String remotePath){
+    public void put(String filename, String remotePath) throws CommandFailed{
         File cwd = new File(FTPanda.cwd);
         File f = new File(cwd, filename);
         InputStream fs;
@@ -201,24 +196,18 @@ public class Connection {
             fs = new FileInputStream(f.getAbsolutePath());
         }
         catch (FileNotFoundException ex){
-            System.out.println(filename + " not found!!");
-            return;
+            throw new CommandFailed(filename + " not found!!");
         }
         try{
             Boolean success = ftpClient.storeFile(remotePath, fs);
             showServerReply(ftpClient);
             if (!success){
-                System.out.println("Failed to upload " + filename + " to " + remotePath);
-                return;
+                throw new CommandFailed("Failed to upload " + filename + " to " + remotePath);
             }
             System.out.println("Successfully uploaded " + filename + " to " + remotePath);
         }
         catch (IOException ex){
-            ex.printStackTrace();
+            throw new CommandFailed(ex.getMessage());
         }
     }
-
-//    public ConnectionInfo getConnectionInfo() {
-//        return connectionInfo;
-//    }
 }

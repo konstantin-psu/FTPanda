@@ -49,9 +49,9 @@ public class FTPanda {
         }
     }
 
-    public void run(String command) {
+    public boolean run(String command) {
         Command currentCommand = new Command(toArray(command), ftpConnection);
-        opt.action(currentCommand);
+        return opt.action(currentCommand);
     }
 
     private String [] toArray(String input) {

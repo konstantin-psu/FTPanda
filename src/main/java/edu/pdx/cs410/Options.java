@@ -56,16 +56,19 @@ public class Options {
 
 
 
-    public void action(Command command) {
+    public boolean action(Command command) {
         try {
             if (options.containsKey(command.name)) {
                 commandInterface currentArg = options.get(command.name);
                 currentArg.run(command);
+                return true;
             } else {
                 System.out.println("No such command.");
+                return false;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
+            return false;
         }
     }
 
@@ -92,4 +95,8 @@ class InvalidCommand extends Exception {
     }
 }
 
-
+class CommandFailed extends Exception {
+    public CommandFailed(String ex){
+        super("Command Failed: "+ex);
+    }
+}

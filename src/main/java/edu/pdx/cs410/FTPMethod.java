@@ -117,7 +117,7 @@ class FtpCommand extends FTPMethod implements commandInterface {
         super(name, use, description);
     }
 
-    public void run(Command commands) throws InvalidCommand {
+    public void run(Command commands) throws InvalidCommand, CommandFailed {
         String [] args = commands.arguments;
         if (args.length != 3) {
             throw new InvalidCommand (name + ' ' + usage);
@@ -133,7 +133,7 @@ class LogoffCommand extends FTPMethod implements commandInterface {
         super(name, use, description);
     }
 
-    public void run(Command commands) throws InvalidCommand {
+    public void run(Command commands) throws InvalidCommand, CommandFailed {
         String [] args = commands.arguments; //user [username] [password]
         if (args.length != 1) {
             throw new InvalidCommand (name + ' ' + usage);
@@ -147,7 +147,7 @@ class ListRemoteCommand extends FTPMethod implements commandInterface {
         super(name, use, description);
     }
 
-    public void run(Command commands) throws InvalidCommand {
+    public void run(Command commands) throws InvalidCommand, CommandFailed {
         if (commands.length() != 1) {
             throw new InvalidCommand(name + ' ' + usage);
         }
@@ -160,7 +160,7 @@ class MakeDirectoryRemoteCommand extends FTPMethod implements commandInterface {
         super(name, use, description);
     }
 
-    public void run(Command commands) throws InvalidCommand {
+    public void run(Command commands) throws InvalidCommand, CommandFailed {
         if (commands.length() != 2) {
             throw new InvalidCommand(name + ' ' + usage);
         }
@@ -174,7 +174,7 @@ class PWDRemoteCommand extends FTPMethod implements commandInterface {
         super(name, use, description);
     }
 
-    public void run(Command commands) throws InvalidCommand {
+    public void run(Command commands) throws InvalidCommand, CommandFailed {
         if (commands.length() != 1) {
             throw new InvalidCommand(name + ' ' + usage);
         }
@@ -188,7 +188,7 @@ class CDRemoteCommand extends FTPMethod implements commandInterface {
         super(name, use, description);
     }
 
-    public void run(Command commands) throws InvalidCommand {
+    public void run(Command commands) throws InvalidCommand, CommandFailed {
         if (commands.length() != 2) {
             throw new InvalidCommand(name + ' ' + usage);
         }
@@ -202,7 +202,7 @@ class CDLocalCommand extends FTPMethod implements commandInterface {
         super(name, use, description);
     }
 
-    public void run(Command commands) throws InvalidCommand {
+    public void run(Command commands) throws InvalidCommand, CommandFailed {
         if (commands.length() != 2) {
             throw new InvalidCommand(name + ' ' + usage);
         }
@@ -228,7 +228,7 @@ class PutCommand extends FTPMethod implements commandInterface{
     public PutCommand(String name, String use, String description){
         super(name, use, description);
     }
-    public void run(Command commands) throws InvalidCommand{
+    public void run(Command commands) throws InvalidCommand, CommandFailed{
         if (commands.length() != 3)
             throw new InvalidCommand(name + ' ' + usage);
         commands.ftpConnection.put(commands.arguments[1], commands.arguments[2]);
