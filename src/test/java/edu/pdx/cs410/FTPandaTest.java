@@ -4,10 +4,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,11 +16,12 @@ import static org.junit.Assert.*;
 public class FTPandaTest {
     static FTPServer testServer = new FTPServer();
     FTPanda ftpClient = new FTPanda();
-    static final String USER = "myNewUser";
-    static final String PASS = "secret";
+    final String USER;
+    static final String USERCONFIG = "ftpandaserver.config";
+    final String PASS;
     static final String SERVER = "localhost";
     static final int PORT = 2221;
-    static final String SERVER_ROOT = "/root";
+    final String USER_HOMEDIR;
     static List<File> fileList = new ArrayList<File>();
 
     private void setupUser(){
@@ -33,6 +31,30 @@ public class FTPandaTest {
     private void connectToServer(){
         String command = "ftp "+SERVER+" "+PORT;
         assertEquals(command, ftpClient.run(command), true);
+    }
+
+    public static ArrayList<String> loadUserInfo(String filePath) {
+        String line;
+        ArrayList<String> uinfo = new ArrayList<String>();
+        try {
+            FileReader fileReader = new FileReader(filePath);
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+            while((line = bufferedReader.readLine()) != null) {
+                uinfo.add(line);
+            }
+            bufferedReader.close();
+        }
+        catch(Exception ex) {
+            ex.printStackTrace();
+        }
+        return uinfo;
+    }
+
+    public FTPandaTest() {
+        ArrayList<String> uinfo = loadUserInfo(USERCONFIG);
+        USER = uinfo.get(0);
+        PASS = uinfo.get(1);
+        USER_HOMEDIR = uinfo.get(2);
     }
 
     @BeforeClass
@@ -78,7 +100,7 @@ public class FTPandaTest {
     public void RemoteListFile() {
         //manually add file to server folder, do remote list, verify in output
         String fname = "test_file.txt";
-        File tfile = new File(SERVER_ROOT, fname);
+        File tfile = new File(USER_HOMEDIR, fname);
         try {
             tfile.createNewFile();
             fileList.add(tfile);
@@ -104,7 +126,7 @@ public class FTPandaTest {
     public void RemoteDeleteFile() {
         //manually add file to server folder, do remote delete, verify in output
         String fname = "test_file.txt";
-        File tfile = new File(SERVER_ROOT, fname);
+        File tfile = new File(USER_HOMEDIR, fname);
         try {
             tfile.createNewFile();
             fileList.add(tfile);
@@ -135,7 +157,7 @@ public class FTPandaTest {
     public void RemoteListDirectory() {
         //manually add file to server folder, do remote list, verify in output
         String dirname = "test_directory";
-        File tdir = new File(SERVER_ROOT, dirname);
+        File tdir = new File(USER_HOMEDIR, dirname);
         tdir.mkdir();
         fileList.add(tdir);
         setupUser();
@@ -157,7 +179,7 @@ public class FTPandaTest {
         //manually add file to server folder, do remote list, verify in output
         String dirname = "test_directory";
         String fname = "test_file_sub.txt";
-        File tdir = new File(SERVER_ROOT, dirname);
+        File tdir = new File(USER_HOMEDIR, dirname);
         tdir.mkdir();
         fileList.add(tdir);
         File tfile = new File(tdir, fname);
