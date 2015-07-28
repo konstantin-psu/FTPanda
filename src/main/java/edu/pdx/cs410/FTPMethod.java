@@ -169,6 +169,20 @@ class MakeDirectoryRemoteCommand extends FTPMethod implements commandInterface {
     }
 }
 
+class DeleteFileRemoteCommand extends FTPMethod implements commandInterface {
+    public DeleteFileRemoteCommand(String name, String use, String description) {
+        super(name, use, description);
+    }
+
+    public void run(Command commands) throws InvalidCommand, CommandFailed {
+        if (commands.length() != 2) {
+            throw new InvalidCommand(name + ' ' + usage);
+        }
+
+        commands.ftpConnection.deleteFile(commands.arguments[1]);
+    }
+}
+
 class PWDRemoteCommand extends FTPMethod implements commandInterface {
     public PWDRemoteCommand(String name, String use, String description) {
         super(name, use, description);
