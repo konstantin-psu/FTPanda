@@ -15,7 +15,7 @@ import org.apache.ftpserver.usermanager.impl.WritePermission;
 import org.apache.log4j.PropertyConfigurator;
 
 import java.awt.event.KeyEvent;
-import java.io.File;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -58,10 +58,11 @@ public class FTPServer {
             userManagerFactory.setPasswordEncryptor(new SaltedPasswordEncryptor());
             UserManager um = userManagerFactory.createUserManager();
             BaseUser user = new BaseUser();
-            user.setName("myNewUser");
-            user.setPassword("secret");
+            loadUserInfo("ftpandaserver.config", user);
+//            user.setName("myNewUser");
+//            user.setPassword("secret");
             user.setEnabled(true);
-            user.setHomeDirectory("/root");
+//            user.setHomeDirectory("/root");
             List<Authority> authorities = new ArrayList<Authority>();
             authorities.add(new WritePermission());
             user.setAuthorities(authorities);
@@ -75,6 +76,32 @@ public class FTPServer {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static void loadUserInfo(String filePath, BaseUser user) {
+        String line;
+        ArrayList<String> uinfo = new ArrayList<String>();
+        try {
+            // FileReader reads text files in the default encoding.
+            FileReader fileReader = new FileReader(filePath);
+
+            // Always wrap FileReader in BufferedReader.
+            BufferedReader bufferedReader =
+                    new BufferedReader(fileReader);
+
+            while((line = bufferedReader.readLine()) != null) {
+                uinfo.add(line);
+            }
+            user.setName(uinfo.get(0));
+            user.setPassword(uinfo.get(1));
+            user.setHomeDirectory(uinfo.get(2));
+
+            bufferedReader.close();
+        }
+        catch(Exception ex) {
+            ex.printStackTrace();
+        }
+
     }
 
 
