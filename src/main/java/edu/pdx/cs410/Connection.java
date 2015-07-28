@@ -124,6 +124,21 @@ public class Connection {
 
     }
 
+    public void deleteFile(String name) throws CommandFailed {
+        boolean success;
+        try {
+            success = ftpClient.deleteFile(name);
+            showServerReply(ftpClient);
+            if (success) {
+                System.out.println("Successfully deleted file: " + name);
+            } else {
+                throw new CommandFailed("Failed to delete file. See server's reply.");
+            }
+        } catch (IOException e) {
+            throw new CommandFailed(e.getMessage());
+        }
+    }
+
     public String rpwd() throws CommandFailed{
         String pathName = null;
         try {

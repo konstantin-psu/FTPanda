@@ -41,6 +41,9 @@ public class Options {
         name = "rmkdir";
         options.put(name, new MakeDirectoryRemoteCommand(name, "[dir name]", "Create directory in working directory on remote side"));
 
+        name = "delete";
+        options.put(name, new DeleteFileRemoteCommand(name, "[file name]", "Delete file in working directory on remote side"));
+
         name = "rpwd";
         options.put(name, new PWDRemoteCommand(name, "", "Print working directory on remote side"));
 

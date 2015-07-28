@@ -101,6 +101,37 @@ public class FTPandaTest {
     }
 
     @Test
+    public void RemoteDeleteFile() {
+        //manually add file to server folder, do remote delete, verify in output
+        String fname = "test_file.txt";
+        File tfile = new File(SERVER_ROOT, fname);
+        try {
+            tfile.createNewFile();
+            fileList.add(tfile);
+        }
+        catch (IOException ex){
+            fail("Failed to create the test file");
+        }
+        setupUser();
+        connectToServer();
+        String command = "delete " + fname;
+        ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(outStream);
+        PrintStream old = System.out;
+        System.setOut(ps);
+        Boolean status = ftpClient.run(command);
+        System.out.flush();
+        assertEquals(command, status, true);
+        outStream.reset();
+
+        status = ftpClient.run("rls");
+        System.out.flush();
+        System.setOut(old);
+        assertEquals(command, status, true);
+        assertEquals("Checking output", outStream.toString().contains(fname), false);
+    }
+
+    @Test
     public void RemoteListDirectory() {
         //manually add file to server folder, do remote list, verify in output
         String dirname = "test_directory";
