@@ -261,7 +261,7 @@ class GetCommand extends FTPMethod implements commandInterface {
             throw new InvalidCommand(name + ' ' + usage);
         }
         else {
-            for (int i = 1 ; i < size-2; ++i) {
+            for (int i = 1 ; i <= size-2; ++i) {
                 commands.ftpConnection.get(commands.arguments[i], commands.arguments[size-1]);
             }
 
