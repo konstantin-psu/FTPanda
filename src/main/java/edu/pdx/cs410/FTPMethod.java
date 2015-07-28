@@ -234,3 +234,23 @@ class PutCommand extends FTPMethod implements commandInterface{
         commands.ftpConnection.put(commands.arguments[1], commands.arguments[2]);
     }
 }
+
+class GetCommand extends FTPMethod implements commandInterface {
+    public GetCommand(String name, String use, String description) {
+        super(name, use, description);
+    }
+
+    public void run(Command commands) throws InvalidCommand, CommandFailed {
+        int size = commands.length();
+
+        if (size < 3) {
+            throw new InvalidCommand(name + ' ' + usage);
+        }
+        else {
+            for (int i = 1 ; i < size-2; ++i) {
+                commands.ftpConnection.get(commands.arguments[i], commands.arguments[size-1]);
+            }
+
+        }
+    }
+}

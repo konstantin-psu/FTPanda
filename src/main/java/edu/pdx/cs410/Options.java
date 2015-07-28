@@ -35,6 +35,9 @@ public class Options {
  		name = "rls";
         options.put(name, new ListRemoteCommand(name, "", "List files/directories in remote working directory"));
 
+        name = "lls";
+        options.put(name, new ListLocalCommand (name, "", "List files/directories in local working directory"));
+
         name = "rmkdir";
         options.put(name, new MakeDirectoryRemoteCommand(name, "[dir name]", "Create directory in working directory on remote side"));
 
@@ -44,14 +47,14 @@ public class Options {
         name = "rcd";
         options.put(name, new CDRemoteCommand(name, "[path]", "Change working directory on remote side"));
 
-        name = "lls";
-        options.put(name, new ListLocalCommand (name, "", "List files/directories in local working directory"));
-
         name = "lcd";
         options.put(name, new CDLocalCommand (name, "[path relative to current local directory]", "Change working directory on local side"));
 
         name = "put";
         options.put(name, new PutCommand(name, "[filename] [destination path relative to current remote directory]", "Upload file from local working directory to remote path specified"));
+
+        name = "get";
+        options.put(name, new GetCommand(name, "[filename]... [destination path relative to current local directory]", "Download file(s) from remote working directory to local path specified"));
     }
 
 

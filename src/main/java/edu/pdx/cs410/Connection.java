@@ -210,4 +210,27 @@ public class Connection {
             throw new CommandFailed(ex.getMessage());
         }
     }
+
+    public void get(String filename, String localPath) throws CommandFailed {
+        String remoteFile = rpwd() + filename; //Gets the name of the file with the full path for the rmeote file
+        File downloadFile = new File(localPath + filename); //Sets the filename for the new local file
+        OutputStream outputStream = null;
+        boolean success = false;
+        try {
+            //Writes remote file to the local directory file location
+            outputStream = new BufferedOutputStream(new FileOutputStream(downloadFile));
+            success = ftpClient.retrieveFile(remoteFile, outputStream);
+            outputStream.close();
+        } catch (FileNotFoundException e) {
+            throw new CommandFailed(e.getMessage());
+        } catch (IOException e) {
+            throw new CommandFailed(e.getMessage());
+        }
+
+        if (success) {
+            System.out.println("File " + filename + " has been downloaded successfully.");
+        }
+
+    }
+
 }
