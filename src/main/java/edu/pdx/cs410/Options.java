@@ -58,6 +58,9 @@ public class Options {
 
         name = "get";
         options.put(name, new GetCommand(name, "[filename]... [destination path relative to current local directory]", "Download file(s) from remote working directory to local path specified"));
+
+        name = "rrmdir";
+        options.put(name, new DeleteDirectoryRemoteCommand(name, "[dir name]", "Remove directory in working directory on remote side"));
     }
 
 

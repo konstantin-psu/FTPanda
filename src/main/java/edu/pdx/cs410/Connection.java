@@ -249,4 +249,18 @@ public class Connection {
 
     }
 
+    public void removeDirectory(String name) throws CommandFailed {
+        boolean success;
+        try {
+            success = ftpClient.removeDirectory(name);
+            showServerReply(ftpClient);
+            if (success) {
+                System.out.println("Successfully removed directory: " + name);
+            } else {
+                throw new CommandFailed("Failed to remove directory. See server's reply.");
+            }
+        } catch (IOException e) {
+            throw new CommandFailed(e.getMessage());
+        }
+    }
 }
