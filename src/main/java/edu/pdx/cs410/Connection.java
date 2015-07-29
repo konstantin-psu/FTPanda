@@ -249,6 +249,7 @@ public class Connection {
 
     }
 
+<<<<<<< HEAD
     public void removeDirectory(String name) throws CommandFailed {
         boolean success;
         try {
@@ -263,4 +264,21 @@ public class Connection {
             throw new CommandFailed(e.getMessage());
         }
     }
+=======
+    public void chmod(String permissions, String filename) throws CommandFailed {
+        boolean success = false;
+        try {
+            success = ftpClient.sendSiteCommand("chmod " + permissions + " " + filename);
+        } catch (IOException e) {
+            throw new CommandFailed(e.getMessage());
+        }
+
+        if (success) {
+            System.out.println("File permissions changed successfully.");
+        } else {
+            System.out.println("File permissions were not changed. Does the remote server support chmod?");
+        }
+    }
+
+>>>>>>> dfad1c705aa765b472d1c995a1efeddb6883486c
 }

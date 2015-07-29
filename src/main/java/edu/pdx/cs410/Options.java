@@ -59,8 +59,13 @@ public class Options {
         name = "get";
         options.put(name, new GetCommand(name, "[filename]... [destination path relative to current local directory]", "Download file(s) from remote working directory to local path specified"));
 
+<<<<<<< HEAD
         name = "rrmdir";
         options.put(name, new DeleteDirectoryRemoteCommand(name, "[dir name]", "Remove directory in working directory on remote side"));
+=======
+        name = "chmod";
+        options.put(name, new ChmodCommand(name, "[permission string] [filename]", "Change the permissions of a file using Posix-style permissions."));
+>>>>>>> dfad1c705aa765b472d1c995a1efeddb6883486c
     }
 
 
