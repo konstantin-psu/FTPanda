@@ -268,3 +268,18 @@ class GetCommand extends FTPMethod implements commandInterface {
         }
     }
 }
+
+class ChmodCommand extends FTPMethod implements commandInterface {
+    public ChmodCommand(String name, String use, String description) {
+        super(name, use, description);
+    }
+
+    @Override
+    public void run(Command command) throws InvalidCommand, CommandFailed {
+        if (command.length() != 3) {
+            throw new InvalidCommand(name + ' ' + usage);
+        }
+
+        command.ftpConnection.chmod(command.arguments[1], command.arguments[2]);
+    }
+}

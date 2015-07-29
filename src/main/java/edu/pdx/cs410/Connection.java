@@ -249,4 +249,19 @@ public class Connection {
 
     }
 
+    public void chmod(String permissions, String filename) throws CommandFailed {
+        boolean success = false;
+        try {
+            success = ftpClient.sendSiteCommand("chmod " + permissions + " " + filename);
+        } catch (IOException e) {
+            throw new CommandFailed(e.getMessage());
+        }
+
+        if (success) {
+            System.out.println("File permissions changed successfully.");
+        } else {
+            System.out.println("File permissions were not changed. Does the remote server support chmod?");
+        }
+    }
+
 }

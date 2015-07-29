@@ -58,6 +58,9 @@ public class Options {
 
         name = "get";
         options.put(name, new GetCommand(name, "[filename]... [destination path relative to current local directory]", "Download file(s) from remote working directory to local path specified"));
+
+        name = "chmod";
+        options.put(name, new ChmodCommand(name, "[permission string] [filename]", "Change the permissions of a file using Posix-style permissions."));
     }
 
 
