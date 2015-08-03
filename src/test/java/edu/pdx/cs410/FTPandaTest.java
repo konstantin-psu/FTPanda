@@ -204,4 +204,51 @@ public class FTPandaTest {
         assertEquals("Checking file not seen", outStream.toString().contains(fname), false);
     }
 
+   @Test
+    public void RemoteCreateFolder() {
+        //manually add subfolder to server folder, verify in output
+        String dname = "test_dir";
+
+        setupUser();
+        connectToServer();
+        String command = "rmkdir " + dname;
+        ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(outStream);
+        PrintStream old = System.out;
+        System.setOut(ps);
+        Boolean status = ftpClient.run(command);
+        System.out.flush();
+        assertEquals(command, status, true);
+        outStream.reset();
+
+        status = ftpClient.run("rls");
+        System.out.flush();
+        System.setOut(old);
+        assertEquals(command, status, true);
+        assertEquals("Checking output", outStream.toString().contains(dname), true);
+    }
+
+    @Test
+    public void RemoteDeleteFolder() {
+        //manually add subfolder to server folder, verify in output
+        String dname = "test_dir";
+
+        setupUser();
+        connectToServer();
+        String command = "rrmdir " + dname;
+        ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(outStream);
+        PrintStream old = System.out;
+        System.setOut(ps);
+        Boolean status = ftpClient.run(command);
+        System.out.flush();
+        assertEquals(command, status, true);
+        outStream.reset();
+
+        status = ftpClient.run("rls");
+        System.out.flush();
+        System.setOut(old);
+        assertEquals(command, status, true);
+        assertEquals("Checking output", outStream.toString().contains(dname), false);
+    }
 }

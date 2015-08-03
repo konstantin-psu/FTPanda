@@ -249,7 +249,6 @@ public class Connection {
 
     }
 
-<<<<<<< HEAD
     public void removeDirectory(String name) throws CommandFailed {
         boolean success;
         try {
@@ -264,7 +263,7 @@ public class Connection {
             throw new CommandFailed(e.getMessage());
         }
     }
-=======
+
     public void chmod(String permissions, String filename) throws CommandFailed {
         boolean success = false;
         try {
@@ -280,5 +279,4 @@ public class Connection {
         }
     }
 
->>>>>>> dfad1c705aa765b472d1c995a1efeddb6883486c
 }
