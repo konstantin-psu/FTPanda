@@ -251,4 +251,40 @@ public class FTPandaTest {
         assertEquals(command, status, true);
         assertEquals("Checking output", outStream.toString().contains(dname), false);
     }
+
+    @Test
+    public void LocalListFileAndCD() {
+        //manually add file to wd folder, do local list, verify in output
+        String fname = "l_test_file.txt";
+        String dname = "l_test_directory";
+        File dfile = new File(FTPanda.cwd, dname);
+        dfile.mkdir();
+        File tfile = new File(dname, fname);
+        try {
+            tfile.createNewFile();
+            fileList.add(tfile);
+        }
+        catch (IOException ex){
+            fail("Failed to create the test file");
+        }
+        finally{
+            fileList.add(dfile);
+        }
+        setupUser();
+        connectToServer();
+        String command = "lcd " + dname;
+        Boolean status = ftpClient.run(command);
+        assertEquals(command, true, status);
+        command = "lls";
+        ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(outStream);
+        PrintStream old = System.out;
+        System.setOut(ps);
+        status = ftpClient.run(command);
+        System.out.flush();
+        System.setOut(old);
+        assertEquals(command, true, status);
+        System.out.print(outStream.toString());
+        assertEquals("Checking output", true, outStream.toString().contains(fname));
+    }
 }
