@@ -27,7 +27,7 @@ public class Options {
         options.put(name, new UserCommand(name, "[uname] [passwd]", "Enter credentials to use for login"));
 
         name = "ftp";
-        options.put(name, new FtpCommand (name, "[server_address] [port]", ""));
+        options.put(name, new FtpCommand (name, "[server_address] [port]", "Login to specified server using saved previously entered credentials"));
 
         name = "logoff";
         options.put(name, new LogoffCommand (name, "", "Close ftp connection"));
