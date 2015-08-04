@@ -207,7 +207,7 @@ public class FTPandaTest {
    @Test
     public void RemoteCreateFolder() {
         //manually add subfolder to server folder, verify in output
-        String dname = "test_dir";
+        String dname = "test_dir1";
 
         setupUser();
         connectToServer();
@@ -231,7 +231,7 @@ public class FTPandaTest {
     @Test
     public void RemoteDeleteFolder() {
         //manually add subfolder to server folder, verify in output
-        String dname = "test_dir";
+        String dname = "test_dir1";
 
         setupUser();
         connectToServer();
