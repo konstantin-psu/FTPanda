@@ -227,9 +227,9 @@ public class Connection {
     }
 
     public void get(String filename, String localPath) throws CommandFailed {
-        String remoteFile = rpwd() + "\\" +filename; //Gets the name of the file with the full path for the rmeote file
+        String remoteFile = rpwd() +filename; //Gets the name of the file with the full path for the rmeote file
         String path = localPath.equals(".")? FTPanda.cwd : localPath;
-        File downloadFile = new File(path + "\\" +filename); //Sets the filename for the new local file
+        File downloadFile = new File(path + "/" +filename); //Sets the filename for the new local file
         OutputStream outputStream = null;
         boolean success = false;
         try {
